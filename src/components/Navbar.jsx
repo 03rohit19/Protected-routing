@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
@@ -10,6 +9,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user); // Get user data from Redux store
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn); // You can also get isLoggedIn directly if you store it in Redux
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +39,8 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  console.log("isLoggedIn in Navbar:", isLoggedIn); // Log isLoggedIn here as well
 
   return (
     <nav className="bg-gray-600 p-4">
