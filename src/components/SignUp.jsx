@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../utils/userSlice.js"; // Import setUser action
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -10,6 +12,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Hook to dispatch actions
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -30,13 +33,19 @@ const SignUp = () => {
       const user = userCredential.user;
 
       // Update user's profile with the name
-      await updateProfile(user, {
-        displayName: name, // Set the display name
-      });
+      await updateProfile(user, { displayName: name });
 
       console.log("User signed up:", user);
 
-      // Redirect to the subscribe page or any other page
+      // Dispatch the setUser action to update Redux state
+      dispatch(
+        setUser({
+          name: user.displayName,
+          email: user.email,
+        })
+      );
+
+      // Redirect to the protected page or any other page
       navigate("/subscribe");
     } catch (error) {
       setError(error.message);
