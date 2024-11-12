@@ -1,14 +1,16 @@
-// SignIn.js
 import React, { useState } from "react";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../utils/userSlice.js"; // Import setUser action
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Hook to dispatch actions
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -22,6 +24,14 @@ const SignIn = () => {
       );
       const user = userCredential.user;
       console.log("User signed in:", user);
+
+      // Dispatch the setUser action to update Redux state
+      dispatch(
+        setUser({
+          name: user.displayName,
+          email: user.email,
+        })
+      );
 
       // Redirect to the protected page
       navigate("/subscribe");
